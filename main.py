@@ -5,91 +5,9 @@ for my progress thought the game "Void Stranger"
 
 import gspread
 
-def test():
-	gc = gspread.service_account(filename='credentials.json')
-	sh = gc.open_by_key("15DneN76Jgohv3YBvCDv_LMqBjNFubChwEn_l_cmjAmQ")
-	worksheet = sh.worksheet('test')
+from get_methods import get_all_methods
 
-	print("cell A1", worksheet.get('A1'))
-	print("row values:", worksheet.row_values(1))
-	print("col values:", worksheet.col_values(1))
-	print("all values:", worksheet.get_all_values())
-	print("cell A1:B4:", worksheet.get("A1:B4"))
-
-	nums = [i + 20 for i in range(6)]
-	worksheet.update([nums], "A1")
-	worksheet.freeze(1)
-
-	multi = "This is a multi line string\nits on two lines"
-	multi2 = ["next", "test"]
-	worksheet.append_row(["a", 1, "c", multi, "\n".join(multi2)])
-
-import abc
-from abc import ABCMeta, abstractmethod
-
-
-class Method(metaclass=ABCMeta):
-	@property
-	@abstractmethod
-	def name(self) -> str:
-		"""Name of the class"""
-		pass
-
-	@staticmethod
-	@abstractmethod
-	def Preform_Method() -> str:
-		"""Gets Some Input from the user and returns a string to put in the spreadsheet"""
-		pass
-
-from typing import Callable
-
-def get_input(enter_text: str, validation: Callable[[str], bool], error_message="Invalid, Try Again"):
-	string = input(enter_text)
-	while not validation(string):
-		print(error_message)
-		string = input(enter_text)
-	return string
-
-class String(Method):
-	@property
-	def name(self):
-		return "String"
-	
-	@staticmethod
-	def Preform_Method():
-		return get_input("Enter: ", lambda _: True)
-
-class Number(Method):
-	@property
-	def name(self):
-		return "Number"
-	
-	@staticmethod
-	def Preform_Method():
-		return get_input("Enter a number: ", lambda x: x.isdigit(), "Invalid Number")
-
-
-class Movement(Method):
-	@property
-	def name(self):
-		return "Movement"
-	
-	@staticmethod
-	def Preform_Method():
-		def valid(s: str):
-			s = s.lower()
-			for c in s:
-				if c not in "wasd ":
-					return False
-			return True
-		directions = get_input("Enter Directions: ", valid, "WASD and <SPACE> only")
-
-		return directions
-
-INPUT_METHODS: list[Method] = [
-	String(),
-	Movement(),
-]
+INPUT_METHODS = get_all_methods()
 
 def get_method(input_method):
 	for method in INPUT_METHODS:
