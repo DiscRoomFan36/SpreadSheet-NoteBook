@@ -1,4 +1,4 @@
-from method import Method, METHOD_LIST
+from method import Method, METHOD_LIST, WORKSHEET
 
 NAME = "Setup"
 class Setup(Method):
@@ -12,7 +12,8 @@ class Setup(Method):
 	def Preform_Method(self, name: str, description: str, method: str, *args, **kwargs):
 		assert method == self.name
 
-		args = [arg for arg in args if arg != ""]
+		kwargs[WORKSHEET].append(args[0])
 
+		args = [arg for arg in args[1:] if arg != ""]
 		for (i, arg) in enumerate(args):
 			kwargs[METHOD_LIST].insert(i, arg)

@@ -5,7 +5,7 @@ for my progress thought the game "Void Stranger"
 
 import gspread
 
-from method import KWARGS, OUTPUTS, METHOD_LIST, COUNTER
+from method import KWARGS, OUTPUTS, METHOD_LIST, COUNTER, WORKSHEET
 from get_methods import INPUT_METHODS
 
 def get_method(input_method):
@@ -23,18 +23,12 @@ def connect(args):
 		exit(1)
 
 	try:
-		noteBook = sh.worksheet(args.NoteBook)
-	except gspread.WorksheetNotFound:
-		print("Error: NoteBook Sheet Not Found")
-		exit(1)
-
-	try:
 		formatSheet = sh.worksheet(args.FormatSheet)
 	except gspread.WorksheetNotFound:
 		print("Error: Format Sheet Not Found")
 		exit(1)
 
-	return (noteBook, formatSheet)
+	return (sh, formatSheet)
 
 def valid_format_methods(args, note_format_inputs):
 	flag = True
@@ -67,7 +61,6 @@ if __name__ == "__main__":
 	import argparse
 	parser = argparse.ArgumentParser(description="Interact with a Spreadsheet NoteBook")
 	parser.add_argument("SpreadSheet", help="The name of the Spreadsheet to access")
-	parser.add_argument("NoteBook", help="The name of the workspace the note is in")
 	parser.add_argument("-f", "--FormatSheet", help="The name of the format sheet in the SpreadSheet", default="Format")
 	parser.add_argument("-d", "--Debug", help="Provides more debug information", action='store_true')
 	args = parser.parse_args()
@@ -75,7 +68,7 @@ if __name__ == "__main__":
 	DEBUG = args.Debug
 
 	print("Welcome to the SpreadSheet NoteBook app")
-	noteBook, formatSheet = connect(args)
+	sh, formatSheet = connect(args)
 	print("Successfully Connected!")
 
 	all_formatting = formatSheet.get_all_values()
@@ -114,8 +107,15 @@ if __name__ == "__main__":
 			print("Counter Limit Exceeded")
 			break
 
-	headers = [f'{x}' for x in noteBook.row_values(1)] # header names
+
+	try:
+		worksheet = sh.worksheet(kwargs[WORKSHEET][-1])
+	except gspread.WorksheetNotFound:
+		print("Error: NoteBook Sheet Not Found")
+		exit(1)
+
+	headers = [f'{x}' for x in worksheet.row_values(1)] # header names
 	new_row = [kwargs[OUTPUTS].get(name, "") for name in headers]
 
-	noteBook.append_row(new_row, gspread.worksheet.ValueInputOption.user_entered)
+	worksheet.append_row(new_row, gspread.worksheet.ValueInputOption.user_entered)
 	print("Successfully added to Spreadsheet")	

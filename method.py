@@ -14,11 +14,15 @@ COUNTER = "Counter"
 MEMORY = "Memory"
 """A Free Memory space. Anything goes. dict[str, Unknown]"""
 
+WORKSHEET = "Worksheet"
+"""The Worksheet that the final output will end up in"""
+
 KWARGS = {
 	OUTPUTS: {},
 	METHOD_LIST: [],
 	COUNTER: [0],
-	MEMORY: {}
+	MEMORY: {},
+	WORKSHEET: [],
 }
 
 class Method(metaclass=ABCMeta):
