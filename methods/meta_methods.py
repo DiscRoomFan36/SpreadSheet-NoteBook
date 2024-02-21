@@ -12,7 +12,8 @@ class Setup(Method):
 	def Preform_Method(self, name: str, description: str, method: str, *args, **kwargs):
 		assert method == self.name
 
-		kwargs[WORKSHEET].append(args[0])
+		if args[0] != "":
+			kwargs[WORKSHEET].append(args[0])
 
 		args = [arg for arg in args[1:] if arg != ""]
 		for (i, arg) in enumerate(args):
