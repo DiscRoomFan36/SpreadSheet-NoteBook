@@ -1,6 +1,6 @@
 from method import Method
 
-from void_capture import get_screenshot_of_window
+from methods.void_capture import get_screenshot_of_window
 from methods.image_uploader import get_folder_id, upload_file
 
 VOID_STRANGER_RESOLUTION = (224, 144)
