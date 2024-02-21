@@ -24,12 +24,10 @@ class ScreenShot(Method):
 	def name(self):
 		return "ScreenShot"
 	
-	@staticmethod
-	def Preform_Method() -> str:
+	def Preform_Method(self, name: str, description: str, method: str, *args, **kwargs) -> str:
+		screenshot_type = args[0]
 
-		# TODO: check if the user whats a screenshot of void stranger
-		void_stranger = True
-		if not void_stranger: raise NotImplementedError("No screenshots other than void stranger")
+		if screenshot_type != "Void Stranger": raise NotImplementedError("No screenshots other than void stranger")
 
 		# TODO: Maybe remove the files after the file is uploaded
 		res = get_screenshot_of_window("Void Stranger", TEMP_FILE_NAME)

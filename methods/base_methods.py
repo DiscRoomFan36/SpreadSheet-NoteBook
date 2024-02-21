@@ -14,8 +14,7 @@ class String(Method):
 	def name(self):
 		return "String"
 	
-	@staticmethod
-	def Preform_Method():
+	def Preform_Method(*args, **kwargs):
 		return get_input("Enter: ", lambda _: True)
 
 class Number(Method):
@@ -23,8 +22,7 @@ class Number(Method):
 	def name(self):
 		return "Number"
 	
-	@staticmethod
-	def Preform_Method():
+	def Preform_Method(*args, **kwargs):
 		return get_input("Enter a number: ", lambda x: x.isdigit(), "Invalid Number")
 
 
@@ -33,8 +31,7 @@ class Movement(Method):
 	def name(self):
 		return "Movement"
 	
-	@staticmethod
-	def Preform_Method():
+	def Preform_Method(*args, **kwargs):
 		def valid(s: str):
 			s = s.lower()
 			for c in s:

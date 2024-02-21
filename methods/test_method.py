@@ -5,6 +5,5 @@ class New_Thing(Method):
 	def name(self):
 		return "New_Thing"
 	
-	@staticmethod
-	def Preform_Method():
+	def Preform_Method(*args, **kwargs):
 		return "Hello"

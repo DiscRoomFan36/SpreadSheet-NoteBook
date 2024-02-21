@@ -1,5 +1,16 @@
 from abc import ABCMeta, abstractmethod
 
+"""key word arg names"""
+
+OUTPUTS = "Outputs"
+"""Dictionary of the outputs from methods"""
+
+METHOD_LIST = "Method List"
+"""List of methods to perform and their order"""
+
+COUNTER = "Counter"
+"""The number of methods that have happened"""
+
 class Method(metaclass=ABCMeta):
 	"""
 		Abstract class that gets some information from the user and return a string to put in a spreadsheet.
@@ -16,8 +27,17 @@ class Method(metaclass=ABCMeta):
 		"""Name of the class"""
 		pass
 
-	@staticmethod
 	@abstractmethod
-	def Preform_Method() -> str:
-		"""Gets Some Input from the user and returns a string to put in the spreadsheet"""
+	def Preform_Method(self, name: str, description: str, method: str, *args, **kwargs) -> str | None:
+		"""Gets Some Input from the user and returns a string to put in the spreadsheet
+		
+		:param name str: name of colum
+		:param description str: description of input
+		:param method str: the method to use to fill this colum
+
+		:param args: additional arguments
+		
+		:return str | None: a string to put in the colum or None
+		
+		"""
 		pass

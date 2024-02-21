@@ -18,6 +18,8 @@ def get_all_methods() -> list[Method]:
 	
 	return methods
 
+INPUT_METHODS = get_all_methods()
+
 if __name__ == "__main__":
 	for m in get_all_methods():
 		print(m.name)

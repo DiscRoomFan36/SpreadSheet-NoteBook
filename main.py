@@ -5,8 +5,8 @@ for my progress thought the game "Void Stranger"
 
 import gspread
 
-from get_methods import get_all_methods
-INPUT_METHODS = get_all_methods()
+from method import OUTPUTS, METHOD_LIST, COUNTER
+from get_methods import INPUT_METHODS
 
 def get_method(input_method):
 	for method in INPUT_METHODS:
@@ -14,16 +14,7 @@ def get_method(input_method):
 			return method
 	raise KeyError
 
-if __name__ == "__main__":
-	import argparse
-	parser = argparse.ArgumentParser(description="Interact with a Spreadsheet NoteBook")
-	parser.add_argument("SpreadSheet", help="The name of the Spreadsheet to access")
-	parser.add_argument("NoteBook", help="The name of the workspace the note is in")
-	parser.add_argument("-f", "--FormatSheet", help="The name of the format sheet in the SpreadSheet", default="Format")
-	args = parser.parse_args()
-
-	print("Welcome to the SpreadSheet NoteBook app")
-
+def connect(args):
 	gc = gspread.service_account(filename='credentials.json')
 	try:
 		sh = gc.open(args.SpreadSheet)
@@ -43,15 +34,10 @@ if __name__ == "__main__":
 		print("Error: Format Sheet Not Found")
 		exit(1)
 
-	print("Successfully Connected!")
+	return (noteBook, formatSheet)
 
-	note_format_names = formatSheet.row_values(1)
-	note_format_descriptions = formatSheet.row_values(2)
-	note_format_inputs = formatSheet.row_values(3)
-
-	note_format = zip(note_format_names, note_format_inputs, note_format_descriptions)
-
-	flag = False
+def valid_format_methods(args, note_format_inputs):
+	flag = True
 	for input_method in note_format_inputs:
 		unseen = True
 		for method in INPUT_METHODS:
@@ -61,20 +47,101 @@ if __name__ == "__main__":
 
 		if unseen:
 			print(f"Invalid Format(s) in ({args.FormatSheet}) WorkSheet: ({input_method}) is not a Input Method")
-			flag = True
-	if flag: exit(1)
+			flag = False
+	return flag
 
-	values = []
+def list_of_list_to_dict_of_array(list_of_list: list[list]):
+	headers, rest = list_of_list[0], list_of_list[1:]
+	dictionary: dict[str, list[str]] = {}
+	for header in headers:
+		dictionary[header] = []
+	
+	for line in rest:
+		for i in range(len(line)):
+			if i < len(headers) and headers[i] in dictionary:
+				dictionary[headers[i]].append(line[i])
 
-	for (i, (name, input_method, description)) in enumerate(note_format):
-		print(f"{i}: {name}, {description}")
+	return dictionary
+
+if __name__ == "__main__":
+	import argparse
+	parser = argparse.ArgumentParser(description="Interact with a Spreadsheet NoteBook")
+	parser.add_argument("SpreadSheet", help="The name of the Spreadsheet to access")
+	parser.add_argument("NoteBook", help="The name of the workspace the note is in")
+	parser.add_argument("-f", "--FormatSheet", help="The name of the format sheet in the SpreadSheet", default="Format")
+	args = parser.parse_args()
+
+	print("Welcome to the SpreadSheet NoteBook app")
+	noteBook, formatSheet = connect(args)
+	print("Successfully Connected!")
+
+	all_formatting = formatSheet.get_all_values()
+	formats = list_of_list_to_dict_of_array(all_formatting)
+	headers = [k for k in formats.keys()]
+
+	DESCRIPTION_INDEX = 0
+	METHOD_INDEX = 1
+
+	methods = [item[METHOD_INDEX] for (_, item) in formats.items()]
+
+	if not valid_format_methods(args, methods): exit(1)
+
+	TOP_LEFT_CELL = all_formatting[0][0]
+
+	kwargs: dict = {
+		OUTPUTS: {},
+		METHOD_LIST: [f"{TOP_LEFT_CELL}"],
+		COUNTER: [0],
+	}
+	# values: dict[str, str] = {}
+
+	LOOP_LIMIT = 10
+
+	index = 0
+	while (len(kwargs[METHOD_LIST]) > 0):
+		print(kwargs)
+
+		name = kwargs[METHOD_LIST].pop(0)
+
+		kwargs[COUNTER].append(kwargs[COUNTER].pop() + 1)
+		if kwargs[COUNTER][0] > LOOP_LIMIT:
+			break
+
+		description = formats[name][DESCRIPTION_INDEX]
+		input_method = formats[name][METHOD_INDEX]
+		args = formats[name]
+
+		print(f"{index}: {name}, {description}")
 
 		method = get_method(input_method)
 
-		output = method.Preform_Method()
+		output = method.Preform_Method(name, *args, **kwargs)
+		if output != None:
+			kwargs[OUTPUTS][name] = output
 
-		values.append(output)
 
-	noteBook.append_row(values, gspread.worksheet.ValueInputOption.user_entered)
+	# for (i, name) in enumerate(headers):
+	# 	description = formats[name][0]
+	# 	input_method = formats[name][1]
+	# 	args = formats[name]
 
-	
+	# 	print(kwargs)
+
+	# 	print(f"{i}: {name}, {description}")
+
+	# 	method = get_method(input_method)
+
+	# 	# output = method.Preform_Method(name, description, input_method)
+	# 	output = method.Preform_Method(name, *args, **kwargs)
+
+	# 	if output != None:
+	# 		# values[name] = output
+	# 		kwargs[OUTPUTS][name] = output
+
+
+	headers = [f'{x}' for x in noteBook.row_values(1)] # header names
+	# new_row = [values.get(name, "") for name in headers]
+	new_row = [kwargs[OUTPUTS].get(name, "") for name in headers]
+
+	noteBook.append_row(new_row, gspread.worksheet.ValueInputOption.user_entered)
+	print("Successfully added to Spreadsheet")	
