@@ -6,7 +6,6 @@ for my progress thought the game "Void Stranger"
 import gspread
 
 from get_methods import get_all_methods
-
 INPUT_METHODS = get_all_methods()
 
 def get_method(input_method):
@@ -76,6 +75,6 @@ if __name__ == "__main__":
 
 		values.append(output)
 
-	noteBook.append_row(values)
+	noteBook.append_row(values, gspread.worksheet.ValueInputOption.user_entered)
 
 	

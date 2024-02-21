@@ -13,7 +13,7 @@ def get_window_names():
 	screen.force_update()  # recommended per Wnck documentation
 
 	# loop all windows
-	windows = [window.get_name() for window in screen.get_windows()]
+	windows: list[str] = [window.get_name() for window in screen.get_windows()]
 
 	# clean up Wnck (saves resources, check documentation)
 	window = None
@@ -21,7 +21,7 @@ def get_window_names():
 	Wnck.shutdown()
 
 	return windows
-def get_screenshot_of_window(name, output = "out.png"):
+def get_screenshot_of_window(name: str, output = "out.png"):
 	import gi
 	gi.require_version('Gtk', '3.0')
 	gi.require_version('Wnck', '3.0')
