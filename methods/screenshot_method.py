@@ -29,7 +29,7 @@ class ScreenShot(Method):
 
 		if screenshot_type != "Void Stranger": raise NotImplementedError("No screenshots other than void stranger")
 
-		# TODO: Maybe remove the files after the file is uploaded
+		# TODO: Maybe remove the files after the file is uploaded, Maybe use 'tempfile'
 		res = get_screenshot_of_window("Void Stranger", TEMP_FILE_NAME)
 		if not res: raise RuntimeError("Cannot Take a picture of Void Stranger")
 		resize_void_stranger_to_native(TEMP_FILE_NAME, TEMP_SMALL_FILE_NAME)
