@@ -69,7 +69,10 @@ if __name__ == "__main__":
 	parser.add_argument("SpreadSheet", help="The name of the Spreadsheet to access")
 	parser.add_argument("NoteBook", help="The name of the workspace the note is in")
 	parser.add_argument("-f", "--FormatSheet", help="The name of the format sheet in the SpreadSheet", default="Format")
+	parser.add_argument("-d", "--Debug", help="Provides more debug information", action='store_true')
 	args = parser.parse_args()
+
+	DEBUG = args.Debug
 
 	print("Welcome to the SpreadSheet NoteBook app")
 	noteBook, formatSheet = connect(args)
@@ -95,52 +98,28 @@ if __name__ == "__main__":
 	}
 	# values: dict[str, str] = {}
 
-	LOOP_LIMIT = 10
+	# TODO: Maybe remove limit at some point
+	COUNTER_LIMIT = 10
 
 	index = 0
 	while (len(kwargs[METHOD_LIST]) > 0):
-		print(kwargs)
+		if DEBUG: print(f"current: {kwargs[METHOD_LIST][0]}, kwargs: {kwargs}")
 
 		name = kwargs[METHOD_LIST].pop(0)
-
-		kwargs[COUNTER].append(kwargs[COUNTER].pop() + 1)
-		if kwargs[COUNTER][0] > LOOP_LIMIT:
-			break
-
-		description = formats[name][DESCRIPTION_INDEX]
-		input_method = formats[name][METHOD_INDEX]
+		method = get_method(formats[name][METHOD_INDEX])
 		args = formats[name]
 
-		print(f"{index}: {name}, {description}")
-
-		method = get_method(input_method)
-
+		method.display(name, *args, **kwargs)
 		output = method.Preform_Method(name, *args, **kwargs)
 		if output != None:
 			kwargs[OUTPUTS][name] = output
-
-
-	# for (i, name) in enumerate(headers):
-	# 	description = formats[name][0]
-	# 	input_method = formats[name][1]
-	# 	args = formats[name]
-
-	# 	print(kwargs)
-
-	# 	print(f"{i}: {name}, {description}")
-
-	# 	method = get_method(input_method)
-
-	# 	# output = method.Preform_Method(name, description, input_method)
-	# 	output = method.Preform_Method(name, *args, **kwargs)
-
-	# 	if output != None:
-	# 		# values[name] = output
-	# 		kwargs[OUTPUTS][name] = output
-
+		
+		kwargs[COUNTER].append(kwargs[COUNTER].pop() + 1)
+		if kwargs[COUNTER][0] > COUNTER_LIMIT:
+			print("Counter Limit Exceeded")
+			break
 
 	headers = [f'{x}' for x in noteBook.row_values(1)] # header names
-	# new_row = [values.get(name, "") for name in headers]
 	new_row = [kwargs[OUTPUTS].get(name, "") for name in headers]
 
 	noteBook.append_row(new_row, gspread.worksheet.ValueInputOption.user_entered)

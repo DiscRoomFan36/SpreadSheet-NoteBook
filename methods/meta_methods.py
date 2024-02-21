@@ -1,4 +1,4 @@
-from method import Method, METHOD_LIST, COUNTER
+from method import Method, METHOD_LIST
 
 NAME = "Setup"
 class Setup(Method):
@@ -6,10 +6,13 @@ class Setup(Method):
 	def name(self):
 		return NAME
 	
+	def display(*args, **kwargs):
+		pass
+	
 	def Preform_Method(self, name: str, description: str, method: str, *args, **kwargs):
 		assert method == self.name
 
-		# kwargs[COUNTER].append(kwargs[COUNTER].pop() + 100)
+		args = [arg for arg in args if arg != ""]
 
-		for arg in args:
-			kwargs[METHOD_LIST].append(arg)
+		for (i, arg) in enumerate(args):
+			kwargs[METHOD_LIST].insert(i, arg)

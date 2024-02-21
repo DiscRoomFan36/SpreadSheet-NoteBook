@@ -17,8 +17,10 @@ class Method(metaclass=ABCMeta):
 
 		Methods:
 			@property name -> str
-			
+
 			@staticmethod Preform_Method -> str
+
+			display -> None
 	"""
 
 	@property
@@ -26,6 +28,10 @@ class Method(metaclass=ABCMeta):
 	def name(self) -> str:
 		"""Name of the class"""
 		pass
+
+	def display(self, name: str, description: str, method: str, *args, **kwargs):
+		"""display message to the terminal before the Preform_Method is called"""
+		print(f"{kwargs[COUNTER][0]}: {name}, {description}")
 
 	@abstractmethod
 	def Preform_Method(self, name: str, description: str, method: str, *args, **kwargs) -> str | None:
