@@ -1,7 +1,7 @@
 from method import Method
 
-from methods.void_capture import get_screenshot_of_window
-from methods.image_uploader import get_folder_id, upload_file
+from utils.void_capture import get_screenshot_of_window
+from utils.image_uploader import get_folder_id, upload_file
 
 VOID_STRANGER_RESOLUTION = (224, 144)
 def resize_void_stranger_to_native(file_path: str, output_path = "out.png"):

@@ -42,4 +42,8 @@ class Movement(Method):
 					return False
 			return True
 		directions = get_input("Enter Directions: ", valid, "WASD and <SPACE> only")
-		return directions.upper()
+		directions = directions.upper()
+
+		directions.replace(" ", "( )")
+
+		return directions
