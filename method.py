@@ -11,16 +11,21 @@ METHOD_LIST = "Method List"
 COUNTER = "Counter"
 """The number of methods that have happened. list[int]"""
 
+POINTER_MEMORY = "Pointers"
+"""A Pointer Memory Space"""
+
 MEMORY = "Memory"
 """A Free Memory space. Anything goes. dict[str, Unknown]"""
 
 WORKSHEET = "Worksheet"
 """The Worksheet that the final output will end up in"""
 
+
 KWARGS = {
 	OUTPUTS: {},
 	METHOD_LIST: [],
 	COUNTER: [0],
+	POINTER_MEMORY: {},
 	MEMORY: {},
 	WORKSHEET: [],
 }
@@ -60,4 +65,19 @@ class Method(metaclass=ABCMeta):
 		:return str | None: a string to put in the colum or None
 		
 		"""
+		pass
+
+
+class QuietMethod(Method):
+	"""A Quieter Method"""
+	@property
+	@abstractmethod
+	def name(self):
+		pass
+	
+	@abstractmethod
+	def Preform_Method(self, name: str, description: str, method: str, *args, **kwargs):
+		pass
+
+	def display(*args, **kwargs):
 		pass

@@ -1,6 +1,6 @@
 import importlib, inspect, os
 
-from method import Method
+from method import Method, QuietMethod
 
 METHOD_FOLDER = "methods"
 
@@ -13,7 +13,7 @@ def get_all_methods() -> list[Method]:
 
 		module_name = f"{METHOD_FOLDER}.{x[:-3]}"
 		for _, cls in inspect.getmembers(importlib.import_module(module_name), inspect.isclass):
-			if issubclass(cls, Method) and cls != Method:
+			if issubclass(cls, Method) and cls != Method and cls != QuietMethod:
 				methods.append(cls())
 	
 	return methods
