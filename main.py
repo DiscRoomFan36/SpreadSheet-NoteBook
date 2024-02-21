@@ -5,7 +5,7 @@ for my progress thought the game "Void Stranger"
 
 import gspread
 
-from method import KWARGS, OUTPUTS, METHOD_LIST, COUNTER, WORKSHEET
+from method import KWARGS, MEMORY, METHOD_LIST, COUNTER, WORKSHEET
 from get_methods import INPUT_METHODS
 
 def get_method(input_method):
@@ -100,13 +100,16 @@ if __name__ == "__main__":
 
 		method.display(name, *args, **kwargs)
 		output = method.Preform_Method(name, *args, **kwargs)
-		if output != None: kwargs[OUTPUTS][name] = output
+		if output != None: kwargs[MEMORY][name] = output
 		
 		kwargs[COUNTER].append(kwargs[COUNTER].pop() + 1)
 		if kwargs[COUNTER][0] > COUNTER_LIMIT:
 			print("Counter Limit Exceeded")
 			break
 
+	if len(kwargs[WORKSHEET]) == 0:
+		print("No Sheet Supplied, no output")
+		exit(0)
 
 	try:
 		worksheet = sh.worksheet(kwargs[WORKSHEET][-1])
@@ -115,7 +118,10 @@ if __name__ == "__main__":
 		exit(1)
 
 	headers = [f'{x}' for x in worksheet.row_values(1)] # header names
-	new_row = [kwargs[OUTPUTS].get(name, "") for name in headers]
+	new_row = [kwargs[MEMORY].get(name, "") for name in headers]
 
-	worksheet.append_row(new_row, gspread.worksheet.ValueInputOption.user_entered)
-	print("Successfully added to Spreadsheet")	
+	if len([r for r in new_row if r != ""]) > 0:
+		worksheet.append_row(new_row, gspread.worksheet.ValueInputOption.user_entered)
+		print("Successfully added to Spreadsheet")	
+
+	print("Finished!")

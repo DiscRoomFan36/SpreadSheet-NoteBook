@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 
 """key word arg names"""
 
-OUTPUTS = "Outputs"
+MEMORY = "Memory"
 """Dictionary of the outputs from methods. dict[str, str]"""
 
 METHOD_LIST = "Method List"
@@ -11,22 +11,14 @@ METHOD_LIST = "Method List"
 COUNTER = "Counter"
 """The number of methods that have happened. list[int]"""
 
-POINTER_MEMORY = "Pointers"
-"""A Pointer Memory Space"""
-
-MEMORY = "Memory"
-"""A Free Memory space. Anything goes. dict[str, Unknown]"""
-
 WORKSHEET = "Worksheet"
 """The Worksheet that the final output will end up in"""
 
 
 KWARGS = {
-	OUTPUTS: {},
+	MEMORY: {},
 	METHOD_LIST: [],
 	COUNTER: [0],
-	POINTER_MEMORY: {},
-	MEMORY: {},
 	WORKSHEET: [],
 }
 

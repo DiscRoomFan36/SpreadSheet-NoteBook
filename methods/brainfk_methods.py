@@ -1,4 +1,4 @@
-from method import QuietMethod, METHOD_LIST, MEMORY, POINTER_MEMORY
+from method import QuietMethod, METHOD_LIST, MEMORY
 
 class PointerRight(QuietMethod):
 	@property
@@ -10,7 +10,8 @@ class PointerRight(QuietMethod):
 
 		args = [arg for arg in args if arg != ""]
 		for arg in args:
-			kwargs[POINTER_MEMORY][arg] = kwargs[POINTER_MEMORY].get(arg, 0) + 1
+			# TODO: Deal with strings
+			kwargs[MEMORY][arg] = kwargs[MEMORY].get(arg, 0) + 1
 
 class PointerLeft(QuietMethod):
 	@property
@@ -22,7 +23,8 @@ class PointerLeft(QuietMethod):
 
 		args = [arg for arg in args if arg != ""]
 		for arg in args:
-			kwargs[POINTER_MEMORY][arg] = kwargs[POINTER_MEMORY].get(arg, 0) - 1
+			# TODO: Deal with strings
+			kwargs[MEMORY][arg] = kwargs[MEMORY].get(arg, 0) - 1
 
 class IncPointer(QuietMethod):
 	@property
@@ -34,7 +36,7 @@ class IncPointer(QuietMethod):
 
 		args = [arg for arg in args if arg != ""]
 		for arg in args:
-			kwargs[MEMORY][kwargs[POINTER_MEMORY][arg]] = kwargs[MEMORY].get(kwargs[POINTER_MEMORY][arg], 0) + 1
+			kwargs[MEMORY][f"{arg}[{kwargs[MEMORY].get(arg, 0)}]"] = kwargs[MEMORY].get(f"{arg}[{kwargs[MEMORY].get(arg, 0)}]", 0) + 1
 	
 class DecPointer(QuietMethod):
 	@property
@@ -46,7 +48,7 @@ class DecPointer(QuietMethod):
 
 		args = [arg for arg in args if arg != ""]
 		for arg in args:
-			kwargs[MEMORY][kwargs[POINTER_MEMORY][arg]] = kwargs[MEMORY].get(kwargs[POINTER_MEMORY][arg], 0) - 1
+			kwargs[MEMORY][f"{arg}[{kwargs[MEMORY].get(arg, 0)}]"] = kwargs[MEMORY].get(f"{arg}[{kwargs[MEMORY].get(arg, 0)}]", 0) - 1
 
 class JumpPointerZero(QuietMethod):
 	@property
@@ -57,7 +59,7 @@ class JumpPointerZero(QuietMethod):
 		flag = False
 		args = [arg for arg in args if arg != ""]
 		for arg in args:
-			if kwargs[MEMORY].get(kwargs[POINTER_MEMORY][arg], 0) == 0:
+			if kwargs[MEMORY].get(f"{arg}[{kwargs[MEMORY].get(arg, 0)}]", 0) == 0:
 				flag = True
 		
 		# TODO: figure out a way to do this? or maybe something else
@@ -67,23 +69,6 @@ class JumpPointerZero(QuietMethod):
 		else:
 			# Add the things until JumpPointerNonZero
 			kwargs[MEMORY]["Jump Stack"] = []
-
-
-
-class PrintPointer(QuietMethod):
-	@property
-	def name(self):
-		return "PrintPointer"
-	
-	def display(*args, **kwargs):
-		args = [arg for arg in args if arg != ""]
-		for arg in args:
-			a = kwargs[MEMORY].get(kwargs[POINTER_MEMORY][arg], 0)
-			print(a)
-
-	def Preform_Method(self, name: str, description: str, method: str, *args, **kwargs):
-		pass
-
 
 
 
