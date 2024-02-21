@@ -5,7 +5,7 @@ for my progress thought the game "Void Stranger"
 
 import gspread
 
-from method import OUTPUTS, METHOD_LIST, COUNTER
+from method import KWARGS, OUTPUTS, METHOD_LIST, COUNTER
 from get_methods import INPUT_METHODS
 
 def get_method(input_method):
@@ -91,12 +91,8 @@ if __name__ == "__main__":
 
 	TOP_LEFT_CELL = all_formatting[0][0]
 
-	kwargs: dict = {
-		OUTPUTS: {},
-		METHOD_LIST: [f"{TOP_LEFT_CELL}"],
-		COUNTER: [0],
-	}
-	# values: dict[str, str] = {}
+	kwargs: dict = KWARGS.copy()
+	kwargs[METHOD_LIST] = [f"{TOP_LEFT_CELL}"]
 
 	# TODO: Maybe remove limit at some point
 	COUNTER_LIMIT = 10
@@ -111,8 +107,7 @@ if __name__ == "__main__":
 
 		method.display(name, *args, **kwargs)
 		output = method.Preform_Method(name, *args, **kwargs)
-		if output != None:
-			kwargs[OUTPUTS][name] = output
+		if output != None: kwargs[OUTPUTS][name] = output
 		
 		kwargs[COUNTER].append(kwargs[COUNTER].pop() + 1)
 		if kwargs[COUNTER][0] > COUNTER_LIMIT:

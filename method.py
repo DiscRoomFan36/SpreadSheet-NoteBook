@@ -3,13 +3,19 @@ from abc import ABCMeta, abstractmethod
 """key word arg names"""
 
 OUTPUTS = "Outputs"
-"""Dictionary of the outputs from methods"""
+"""Dictionary of the outputs from methods. dict[str, str]"""
 
 METHOD_LIST = "Method List"
-"""List of methods to perform and their order"""
+"""List of methods to perform and their order. list[str]"""
 
 COUNTER = "Counter"
-"""The number of methods that have happened"""
+"""The number of methods that have happened. list[int]"""
+
+KWARGS = {
+	OUTPUTS: {},
+	METHOD_LIST: [],
+	COUNTER: [0],
+}
 
 class Method(metaclass=ABCMeta):
 	"""
