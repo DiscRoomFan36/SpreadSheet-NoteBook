@@ -11,10 +11,14 @@ METHOD_LIST = "Method List"
 COUNTER = "Counter"
 """The number of methods that have happened. list[int]"""
 
+MEMORY = "Memory"
+"""A Free Memory space. Anything goes. dict[str, Unknown]"""
+
 KWARGS = {
 	OUTPUTS: {},
 	METHOD_LIST: [],
 	COUNTER: [0],
+	MEMORY: {}
 }
 
 class Method(metaclass=ABCMeta):
