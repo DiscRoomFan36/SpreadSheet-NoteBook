@@ -62,14 +62,8 @@ class Method(metaclass=ABCMeta):
 
 class QuietMethod(Method):
 	"""A Quieter Method"""
-	@property
-	@abstractmethod
-	def name(self):
-		pass
-	
-	@abstractmethod
-	def Preform_Method(self, name: str, description: str, method: str, *args, **kwargs):
-		pass
-
 	def display(*args, **kwargs):
 		pass
+
+def trim_args(args):
+	return [arg for arg in args if arg != ""]
