@@ -32,20 +32,6 @@ def connect(args):
 
 	return (sh, formatSheet)
 
-def valid_format_methods(args, note_format_inputs):
-	flag = True
-	for input_method in note_format_inputs:
-		unseen = True
-		for method in INPUT_METHODS:
-			if input_method == method.name:
-				unseen = False
-				break
-
-		if unseen:
-			print(f"Invalid Format(s) in ({args.FormatSheet}) WorkSheet: ({input_method}) is not a Input Method")
-			flag = False
-	return flag
-
 def list_of_list_to_dict_of_array(list_of_list: list[list]):
 	headers, rest = list_of_list[0], list_of_list[1:]
 	dictionary: dict[str, list[str]] = {}
@@ -58,6 +44,59 @@ def list_of_list_to_dict_of_array(list_of_list: list[list]):
 				dictionary[headers[i]].append(line[i])
 
 	return dictionary
+
+
+DESCRIPTION_INDEX = 0
+METHOD_INDEX = 1
+class Engine():
+	program = None
+	headers = None
+	input_methods = INPUT_METHODS
+	kwargs = None
+
+	@staticmethod
+	def valid_format_methods(note_format_inputs):
+		flag = True
+		for input_method in note_format_inputs:
+			unseen = True
+			for method in INPUT_METHODS:
+				if input_method == method.name:
+					unseen = False
+					break
+			if unseen:
+				print(f"Invalid Format(s) in Program: ({input_method}) is not a Input Method")
+				flag = False
+		return flag
+
+	def __init__(self, program) -> None:
+		self.program = program
+		self.headers = [k for k in self.program.keys()]
+
+		methods = [item[METHOD_INDEX] for (_, item) in program.items()]
+
+		if not Engine.valid_format_methods(methods): exit(1)
+
+		TOP_LEFT_CELL = all_formatting[0][0]
+
+		self.kwargs = KWARGS.copy()
+		self.kwargs[METHOD_LIST] = [f"{TOP_LEFT_CELL}"]
+
+	def run(self, step_limit: int | None = None):
+		while (len(self.kwargs[METHOD_LIST]) > 0):
+			if DEBUG: print(f"current: {self.kwargs[METHOD_LIST][0]}, kwargs: {self.kwargs}")
+
+			name = self.kwargs[METHOD_LIST].pop(0)
+			method = get_method(self.program[name][METHOD_INDEX])
+			args = self.program[name]
+
+			method.display(name, *args, **self.kwargs)
+			output = method.Preform_Method(name, *args, **self.kwargs)
+			if output != None: self.kwargs[MEMORY][name] = output
+			
+			self.kwargs[COUNTER].append(self.kwargs[COUNTER].pop() + 1)
+			if step_limit is not None and self.kwargs[COUNTER][0] > step_limit:
+				print("Counter Limit Exceeded")
+				break
 
 if __name__ == "__main__":
 	import argparse
@@ -75,40 +114,12 @@ if __name__ == "__main__":
 
 	all_formatting = formatSheet.get_all_values()
 	formats = list_of_list_to_dict_of_array(all_formatting)
-	headers = [k for k in formats.keys()]
-
-	DESCRIPTION_INDEX = 0
-	METHOD_INDEX = 1
-
-	methods = [item[METHOD_INDEX] for (_, item) in formats.items()]
-
-	if not valid_format_methods(args, methods): exit(1)
-
-	TOP_LEFT_CELL = all_formatting[0][0]
-
-	kwargs: dict = KWARGS.copy()
-	# kwargs[PROGRAM] = formats
-	kwargs[METHOD_LIST] = [f"{TOP_LEFT_CELL}"]
 
 	# TODO: Maybe remove limit at some point
 	COUNTER_LIMIT = 100000
-
-	index = 0
-	while (len(kwargs[METHOD_LIST]) > 0):
-		if DEBUG: print(f"current: {kwargs[METHOD_LIST][0]}, kwargs: {kwargs}")
-
-		name = kwargs[METHOD_LIST].pop(0)
-		method = get_method(formats[name][METHOD_INDEX])
-		args = formats[name]
-
-		method.display(name, *args, **kwargs)
-		output = method.Preform_Method(name, *args, **kwargs)
-		if output != None: kwargs[MEMORY][name] = output
-		
-		kwargs[COUNTER].append(kwargs[COUNTER].pop() + 1)
-		if kwargs[COUNTER][0] > COUNTER_LIMIT:
-			print("Counter Limit Exceeded")
-			break
+	engine = Engine(formats)
+	engine.run(COUNTER_LIMIT)
+	kwargs = engine.kwargs
 
 	if len(kwargs[WORKSHEET]) == 0:
 		print("No Sheet Supplied, no output")
@@ -128,3 +139,5 @@ if __name__ == "__main__":
 		print("\nSuccessfully added to Spreadsheet")	
 
 	print("Finished!")
+
+

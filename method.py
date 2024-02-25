@@ -2,10 +2,6 @@ from abc import ABCMeta, abstractmethod
 
 """key word arg names"""
 
-# TODO: Decide wether needed
-# PROGRAM = "Program"
-# """The Program currently running"""
-
 MEMORY = "Memory"
 """Dictionary of the outputs from methods. dict[str, str]"""
 
@@ -20,7 +16,6 @@ WORKSHEET = "Worksheet"
 
 
 KWARGS = {
-	# PROGRAM: {},
 	MEMORY: {},
 	METHOD_LIST: [],
 	COUNTER: [0],
