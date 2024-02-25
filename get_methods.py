@@ -1,3 +1,5 @@
+#!/bin/python3
+
 import importlib, inspect, os
 
 from method import Method, QuietMethod

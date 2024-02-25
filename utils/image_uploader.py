@@ -1,3 +1,5 @@
+#!/bin/python3
+
 import os
 import googleapiclient.http
 from google.oauth2 import service_account

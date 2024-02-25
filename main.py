@@ -1,3 +1,5 @@
+#!/bin/python3
+
 """
 This project is supposed to help create a notebook
 for my progress thought the game "Void Stranger"

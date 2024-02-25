@@ -1,5 +1,6 @@
-# program to get a screenshot of void stranger so i can put it all in as spreadsheet for some AUTO-HOTKEY GAMING
+#!/bin/python3
 
+# program to get a screenshot of void stranger so i can put it all in as spreadsheet for some AUTO-HOTKEY GAMING
 
 # Bad Way of doing this
 def get_window_names():
