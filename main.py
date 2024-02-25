@@ -85,10 +85,11 @@ if __name__ == "__main__":
 	TOP_LEFT_CELL = all_formatting[0][0]
 
 	kwargs: dict = KWARGS.copy()
+	# kwargs[PROGRAM] = formats
 	kwargs[METHOD_LIST] = [f"{TOP_LEFT_CELL}"]
 
 	# TODO: Maybe remove limit at some point
-	COUNTER_LIMIT = 10
+	COUNTER_LIMIT = 100000
 
 	index = 0
 	while (len(kwargs[METHOD_LIST]) > 0):
@@ -122,6 +123,6 @@ if __name__ == "__main__":
 
 	if len([r for r in new_row if r != ""]) > 0:
 		worksheet.append_row(new_row, gspread.worksheet.ValueInputOption.user_entered)
-		print("Successfully added to Spreadsheet")	
+		print("\nSuccessfully added to Spreadsheet")	
 
 	print("Finished!")
