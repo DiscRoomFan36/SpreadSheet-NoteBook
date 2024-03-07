@@ -67,6 +67,18 @@ class Select(Method):
 		i = int(get_input("Enter Selection: ", validate))
 		kwargs[METHOD_LIST].insert(0, args[i - 1])
 
+class Optional(Method):
+	@property
+	def name(self):
+		return "Optional"
+	
+	def Preform_Method(self, name, description, method, optional, *args, **kwargs):
+		selected = input("Yes/No?: ")
+		if "y" in selected.lower():
+			kwargs[METHOD_LIST].insert(0, optional)
+		elif len(args) > 0 and args[0] != "":
+			kwargs[MEMORY][optional] = args[0]
+
 class SetOutput(QuietMethod):
 	@property
 	def name(self):

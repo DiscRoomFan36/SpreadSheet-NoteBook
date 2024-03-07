@@ -53,3 +53,25 @@ class Movement(Method):
 		directions.replace(" ", "( )")
 
 		return directions
+
+class Dialog(Method):
+	@property
+	def name(self):
+		return "Dialog"
+	
+	def Preform_Method(self, *args, **kwargs):
+		log = []
+		print("Enter in the lines of dialog. type 'END()' to quit.\n")
+		while True:
+			next_dialog = input()
+			if next_dialog == "END()":
+				break
+			log.append(next_dialog)
+		
+		while log[-1] == "":
+			log.pop()
+		
+		return log
+
+
+

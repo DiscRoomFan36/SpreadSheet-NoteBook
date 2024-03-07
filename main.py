@@ -55,9 +55,9 @@ class Engine():
 	kwargs = None
 
 	@staticmethod
-	def valid_format_methods(note_format_inputs):
+	def valid_format_methods(method_inputs):
 		flag = True
-		for input_method in note_format_inputs:
+		for input_method in method_inputs:
 			unseen = True
 			for method in INPUT_METHODS:
 				if input_method == method.name:
@@ -123,20 +123,19 @@ if __name__ == "__main__":
 
 	if len(kwargs[WORKSHEET]) == 0:
 		print("No Sheet Supplied, no output")
-		exit(0)
+	else:
+		try:
+			worksheet = sh.worksheet(kwargs[WORKSHEET][-1])
+		except gspread.WorksheetNotFound:
+			print("Error: NoteBook Sheet Not Found")
+			exit(1)
 
-	try:
-		worksheet = sh.worksheet(kwargs[WORKSHEET][-1])
-	except gspread.WorksheetNotFound:
-		print("Error: NoteBook Sheet Not Found")
-		exit(1)
+		headers = [f'{x}' for x in worksheet.row_values(1)] # header names
+		new_row = [kwargs[MEMORY].get(name, "") for name in headers]
 
-	headers = [f'{x}' for x in worksheet.row_values(1)] # header names
-	new_row = [kwargs[MEMORY].get(name, "") for name in headers]
-
-	if len([r for r in new_row if r != ""]) > 0:
-		worksheet.append_row(new_row, gspread.worksheet.ValueInputOption.user_entered)
-		print("\nSuccessfully added to Spreadsheet")	
+		if len([r for r in new_row if r != ""]) > 0:
+			worksheet.append_row(new_row, gspread.worksheet.ValueInputOption.user_entered)
+			print("\nSuccessfully added to Spreadsheet")	
 
 	print("Finished!")
 
