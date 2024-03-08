@@ -73,5 +73,15 @@ class Dialog(Method):
 		
 		return log
 
-
+class Boolean(Method):
+	@property
+	def name(self):
+		return "Boolean"
+	
+	def Preform_Method(self, *args, **kwargs):
+		answer = input("Yes/No?: ")
+		if "y" in answer.lower():
+			return "TRUE"
+		else:
+			return "FALSE"
 

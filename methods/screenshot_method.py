@@ -22,7 +22,7 @@ TEMP_SMALL_FILE_NAME = "./temp/void_small.png"
 class ScreenShot(Method):
 	@property
 	def name(self):
-		return "ScreenShot"
+		return "Screen Shot"
 	
 	def Preform_Method(self, name: str, description: str, method: str, *args, **kwargs) -> str:
 		screenshot_type = args[0]
