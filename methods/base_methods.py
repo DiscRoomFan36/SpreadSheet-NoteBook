@@ -1,4 +1,4 @@
-from method import Method
+from method import Method, trim_args, MEMORY
 
 from typing import Callable
 
@@ -78,10 +78,20 @@ class Boolean(Method):
 	def name(self):
 		return "Boolean"
 	
-	def Preform_Method(self, *args, **kwargs):
-		answer = input("Yes/No?: ")
-		if "y" in answer.lower():
-			return "TRUE"
-		else:
-			return "FALSE"
+	def Preform_Method(self, name, description, method, *args, **kwargs):
+		args = trim_args(args)
+
+		if len(args) == 0:
+			answer = input("Yes/No?: ")
+			if "y" in answer.lower():
+				return "TRUE"
+			else:
+				return "FALSE"	
+
+		for arg in args:
+			answer = input(f"{arg} (Yes/No)?: ")
+
+			answer = "True" if "y" in answer.lower() else "FALSE"
+
+			kwargs[MEMORY][arg] = answer
 
