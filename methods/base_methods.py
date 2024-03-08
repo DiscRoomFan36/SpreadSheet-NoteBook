@@ -50,7 +50,7 @@ class Movement(Method):
 		directions = get_input("Enter Directions: ", valid, "WASD and <SPACE> only")
 		directions = directions.upper()
 
-		directions.replace(" ", "( )")
+		directions = directions.replace(" ", "*")
 
 		return directions
 
