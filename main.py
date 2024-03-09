@@ -48,7 +48,9 @@ def list_of_list_to_dict_of_array(list_of_list: list[list]):
 
 DESCRIPTION_INDEX = 0
 METHOD_INDEX = 1
+import copy
 class Engine():
+
 	program = None
 	headers = None
 	input_methods = INPUT_METHODS
@@ -82,7 +84,7 @@ class Engine():
 		self.init_kwargs = KWARGS.copy()
 		self.init_kwargs[METHOD_LIST] = [f"{TOP_LEFT_CELL}"]
 
-		self.kwargs = self.init_kwargs.copy()
+		self.kwargs = copy.deepcopy(self.init_kwargs)
 
 	def run(self, step_limit: int | None = None):
 		while (len(self.kwargs[METHOD_LIST]) > 0):
@@ -101,7 +103,7 @@ class Engine():
 				print("Counter Limit Exceeded")
 				break
 	def reset(self):
-		self.kwargs = self.init_kwargs.copy()
+		self.kwargs = copy.deepcopy(self.init_kwargs)
 
 if __name__ == "__main__":
 	import argparse
@@ -146,8 +148,8 @@ if __name__ == "__main__":
 
 		print("Finished!")
 
-		a = input("\n\n\nDo you want to do that again? (Yes/No)?")
-		if 'y' not in a.lower():
+		answer = input("\n\n\nDo you want to do that again? (Yes/No)?")
+		if 'y' not in answer.lower():
 			break
 
 		engine.reset()
