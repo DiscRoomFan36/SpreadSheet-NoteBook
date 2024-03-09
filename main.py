@@ -52,6 +52,7 @@ class Engine():
 	program = None
 	headers = None
 	input_methods = INPUT_METHODS
+	init_kwargs = None
 	kwargs = None
 
 	@staticmethod
@@ -78,8 +79,10 @@ class Engine():
 
 		TOP_LEFT_CELL = all_formatting[0][0]
 
-		self.kwargs = KWARGS.copy()
-		self.kwargs[METHOD_LIST] = [f"{TOP_LEFT_CELL}"]
+		self.init_kwargs = KWARGS.copy()
+		self.init_kwargs[METHOD_LIST] = [f"{TOP_LEFT_CELL}"]
+
+		self.kwargs = self.init_kwargs.copy()
 
 	def run(self, step_limit: int | None = None):
 		while (len(self.kwargs[METHOD_LIST]) > 0):
@@ -97,6 +100,8 @@ class Engine():
 			if step_limit is not None and self.kwargs[COUNTER][0] > step_limit:
 				print("Counter Limit Exceeded")
 				break
+	def reset(self):
+		self.kwargs = self.init_kwargs.copy()
 
 if __name__ == "__main__":
 	import argparse
@@ -118,25 +123,34 @@ if __name__ == "__main__":
 	# TODO: Maybe remove limit at some point
 	COUNTER_LIMIT = 100000
 	engine = Engine(formats)
-	engine.run(COUNTER_LIMIT)
-	kwargs = engine.kwargs
 
-	if len(kwargs[WORKSHEET]) == 0:
-		print("No Sheet Supplied, no output")
-	else:
-		try:
-			worksheet = sh.worksheet(kwargs[WORKSHEET][-1])
-		except gspread.WorksheetNotFound:
-			print("Error: NoteBook Sheet Not Found")
-			exit(1)
+	while True:
+		engine.run(COUNTER_LIMIT)
+		kwargs = engine.kwargs
 
-		headers = [f'{x}' for x in worksheet.row_values(1)] # header names
-		new_row = [kwargs[MEMORY].get(name, "") for name in headers]
+		if len(kwargs[WORKSHEET]) == 0:
+			print("No Sheet Supplied, no output")
+		else:
+			try:
+				worksheet = sh.worksheet(kwargs[WORKSHEET][-1])
+			except gspread.WorksheetNotFound:
+				print("Error: NoteBook Sheet Not Found")
+				exit(1)
 
-		if len([r for r in new_row if r != ""]) > 0:
-			worksheet.append_row(new_row, gspread.worksheet.ValueInputOption.user_entered)
-			print("\nSuccessfully added to Spreadsheet")	
+			headers = [f'{x}' for x in worksheet.row_values(1)] # header names
+			new_row = [kwargs[MEMORY].get(name, "") for name in headers]
 
-	print("Finished!")
+			if len([r for r in new_row if r != ""]) > 0:
+				worksheet.append_row(new_row, gspread.worksheet.ValueInputOption.user_entered)
+				print("\nSuccessfully added to Spreadsheet")	
+
+		print("Finished!")
+
+		a = input("\n\n\nDo you want to do that again? (Yes/No)?")
+		if 'y' not in a.lower():
+			break
+
+		engine.reset()
+		print("\n\n\n", end="")
 
 
