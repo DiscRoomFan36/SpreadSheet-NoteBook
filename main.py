@@ -153,6 +153,6 @@ if __name__ == "__main__":
 			break
 
 		engine.reset()
-		print("\n\n\n", end="")
+		print("\n", end="")
 
 
